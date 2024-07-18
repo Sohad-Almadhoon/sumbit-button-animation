@@ -1,0 +1,132 @@
+body {
+  background: white;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+:root {
+  --squish-animation-time: 500ms;
+  --progress-animation-time: 1000ms;
+  --circle-animation-time: 300ms;
+  --btn-width: 250px;
+  --btn-height: 80px;
+}
+.btn {
+  background: #282d2f;
+  color: #71dfbe;
+  border: none;
+  border-radius: 0.125em;
+  width: var(--btn-width);
+  height: var(--btn-height);
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.5rem;
+  position: relative;
+  padding: 0;
+}
+.btn.animating {
+  background-color: transparent;
+  color: transparent;
+  user-select: none;
+  cursor: default;
+  animation: hide 1ms
+    calc(var(--progress-animation-time) + var(--squish-animation-time));
+  animation-fill-mode: forwards;
+}
+.btn::before {
+  content: "";
+  background: #282d2f;
+  position: absolute;
+  inset: 0;
+  border-radius: 0.125em;
+  display: none;
+  animation: squish var(--squish-animation-time)
+    cubic-bezier(0.26, 0.6, 0.46, 1.7);
+  animation-fill-mode: forwards;
+}
+.btn::after {
+  content: "";
+  background-color: #aaa;
+  position: absolute;
+  display: none;
+  left: 50%;
+  right: 50%;
+  top: 45%;
+  bottom: 45%;
+  border-radius: 0.25em;
+  animation: progress var(--progress-animation-time)
+    var(--squish-animation-time);
+  animation-fill-mode: forwards;
+}
+.btn.animating::before,
+.btn.animating::after {
+  display: block;
+}
+.btn.animating + .checkmark-container {
+  background: #282d2f;
+  border-radius: 0.25rem;
+  width: 0;
+  height: 0;
+  animation: circle var(--circle-animation-time)
+    calc(var(--squish-animation-time) + var(--progress-animation-time)) forwards
+    cubic-bezier(0.26, 0.6, 0.46, 1.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn.animating + .checkmark-container .checkmark-svg {
+  stroke: white;
+  width: 50px;
+  stroke-dashoffset: 40.84104919433594;
+  stroke-dasharray: 40.84104919433594;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3px;
+  animation: checkmark var(--circle-animation-time)
+    calc(
+      var(--squish-animation-time) + var(--progress-animation-time) +
+        var(--circle-animation-time)
+    )
+    forwards;
+}
+@keyframes squish {
+  100% {
+    left: -25%;
+    right: -25%;
+    top: 45%;
+    bottom: 45%;
+    border-radius: 0.25em;
+  }
+}
+
+@keyframes progress {
+  100% {
+    left: -25%;
+    right: -25%;
+  }
+}
+@keyframes hide {
+  100% {
+    display: none;
+  }
+}
+@keyframes circle {
+  0% {
+    width: calc(var(--btn-width) * 1.5);
+    height: calc(var(--btn-height) * 0.1);
+  }
+  100% {
+    width: 100px;
+    height: 100px;
+    background: #71dfbe;
+    border-radius: 100%;
+  }
+}
+
+@keyframes checkmark {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
